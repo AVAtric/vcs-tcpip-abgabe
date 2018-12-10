@@ -1,2 +1,9 @@
 TCP/IP client server
 
+$ git clone https://github.com/AVAtric/vcs-tcpip-abgabe.git
+$ cd vcs-tcpip-abgabe
+$ make all
+$ make doc
+
+For further information take a look at:
+https://github.com/AVAtric/vcs_tcpip.git
