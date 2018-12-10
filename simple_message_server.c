@@ -80,13 +80,13 @@ int main(int argc, char *argv[]) {
 
     // Create a socket or throw an error if its not possible
     if ((socket = create_socket(port)) == -1) {
-        fprintf(stderr, "Socket can't be created!\n";
+        fprintf(stderr, "Socket can't be created!\n");
         return EXIT_FAILURE;
     }
 
     // Wait and accept connections and fork a new server or throw error if not possible
     if (fork_server(socket) == -1) {
-        fprintf(stderr, "Forking server failed!\n";
+        fprintf(stderr, "Forking server failed!\n");
         return EXIT_FAILURE;
     }
 
@@ -156,7 +156,7 @@ static int parse_parameters(int argc, char **argv, char **port) {
 
     // Check lenght of arguments
     if (optind < argc) {
-        warnx("Lenght of arguments is not right!")
+        warnx("Lenght of arguments is not right!");
         return -1;
     }
 
