@@ -27,7 +27,6 @@
 #include <unistd.h>
 #include <err.h>
 #include <errno.h>
-//#include <arpa/inet.h>    //Can be used for printf(IP);
 
 /*
  * --------------------------------------------------------------- defines --
@@ -70,7 +69,7 @@ static int read_resp(FILE *read_fd);
  * \param argv - array of command line arguments.
  *
  * \return Information about success or failure in the execution
- * \retval EXIT_FAILURE failed execution.
+ * \retval EXIT_FAILURE failed execution
  * \retval EXIT_SUCCESS successful execution
  */
 int main(const int argc, const char *const argv[]) {
@@ -142,12 +141,12 @@ int main(const int argc, const char *const argv[]) {
 /**
  * \brief Create socket and connect to server
  *
- * \param server - number of command line arguments.
+ * \param server - string Servername.
  * \param port - string with information of the port
  *
- * \return file descriptor
- * \retval On success, a file descriptor for the new socket is returned
- * \retval On error, -1 is returned
+ * \return Gives information of failure or return file descriptor
+ * \retval fd for the new socket is returned
+ * \retval -1 failed execution
  */
 static int connect_to_server(const char *server, const char *port) {
     int sfd = -1, s;
@@ -218,7 +217,9 @@ static void usage(FILE *stream, const char *cmd, int exitcode) {
  * \param message - message which get added to request
  * \param img_url - img_url which get added to request
  *
- * @returns 0 if everything went well or -1 in case of error
+ * \return Information about success or failure in the execution
+ * \retval -1 failed execution
+ * \retval 0 successful execution
  */
 static int send_req(FILE *write_fd, const char *user, const char *message, const char *img_url) {
     const char *pre_user = "user=";
@@ -248,11 +249,14 @@ static int send_req(FILE *write_fd, const char *user, const char *message, const
 
 /**
  * \brief Fetch and well-form server response.
+ * 
  * Writes obtained Files to disk.
  *
  * \param read_fd - FILE pointer where to read the responst
  *
- * @returns 0 if everything went well or -1 in case of error
+ * \return Information about success or failure in the execution
+ * \retval -1 failed execution
+ * \retval 0 successful execution
  */
 static int read_resp(FILE *read_fd) {
     char *line = NULL;
