@@ -80,11 +80,13 @@ int main(int argc, char *argv[]) {
 
     // Create a socket or throw an error if its not possible
     if ((socket = create_socket(port)) == -1) {
+        fprintf(stderr, "Socket can't be created!\n";
         return EXIT_FAILURE;
     }
 
     // Wait and accept connections and fork a new server or throw error if not possible
     if (fork_server(socket) == -1) {
+        fprintf(stderr, "Forking server failed!\n";
         return EXIT_FAILURE;
     }
 
@@ -133,11 +135,13 @@ static int parse_parameters(int argc, char **argv, char **port) {
                     return -1;
                 }
 
+                // Check if port is a number
                 if(*check_convert != '\0'){
                     warnx("Port need to be a number!");
                     return -1;
                 }
 
+                // Check if port is in rage
                 if(port_number < 1 || port_number > 65535){
                     warnx("Port not in rage (1-65535)!");
                     return -1;
@@ -150,7 +154,9 @@ static int parse_parameters(int argc, char **argv, char **port) {
         }
     }
 
+    // Check lenght of arguments
     if (optind < argc) {
+        warnx("Lenght of arguments is not right!")
         return -1;
     }
 
@@ -182,6 +188,7 @@ static int create_socket(char *port) {
 
     // Get all available addresses
     if (getaddrinfo(NULL, port, &base_addr, &base_info) != 0) {
+        warnx("No addresses available!");
         return -1;
     }
 
@@ -223,7 +230,6 @@ static int create_socket(char *port) {
  *
  * \param socket_fd - integer value of the server socket
  *
- *
  * \return Information about success or failure in the execution
  * \retval -1 failed execution.
  */
@@ -252,21 +258,21 @@ static int fork_server(int socket_fd) {
 
     // Wait for connections
     while (1) {
+        // Wait for connections
         if ((active_connection = accept(socket_fd, (struct sockaddr *)&socket_addr, &addr_len)) == -1) {
             if (errno == EAGAIN || errno == EWOULDBLOCK) {
                 continue;
             } else {
                 close(socket_fd);
+                warnx("Connection failed!");
                 return -1;
             }
         }
 
         // When connection occur fork new process
         switch (fork()) {
-            case -1:
-                close(active_connection);
-                break;
             case 0:
+                // Close listener waiting on connection
                 close(socket_fd);
 
                 // Redirect connection, passing to STDIN and closing old one
@@ -279,19 +285,26 @@ static int fork_server(int socket_fd) {
                     _exit(EXIT_FAILURE);
                 }
 
+                // Close copied file descriptor
                 close(active_connection);
+
+                // Start server logic using stdin and stdiout where fildescriptor is redirected
                 execl(SERVER_LOGIC, "", NULL);
 
                 // Will only be reached if starting logic failed
                 warnx("Server logic not found!");
                 _exit(EXIT_FAILURE);
+            case -1:
+                // Close parent connection
+                close(active_connection);
+                break;
             default:
+                // Undefined state - closeing connection
                 close(active_connection);
                 break;
         }
     }
 }
-
 
 /**
  * \brief Child signal handler
